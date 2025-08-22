@@ -1,0 +1,16 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "em6 Energy Price",
+        "description": "Select your location.",
+        "data": {
+          "location": "Location"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to retrieve locations"
+    }
+  }
+}

@@ -5,7 +5,8 @@
   "dependencies": [],
   "documentation": "https://github.com/codyc1515/ha-em6",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/codyc15/ha-em6/issues",
+  "issue_tracker": "https://github.com/codyc1515/ha-em6/issues",
   "requirements": [],
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "config_flow": true
 }

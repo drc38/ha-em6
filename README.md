@@ -1,12 +1,12 @@
 # em6 Energy Price integration for Home Assistant
 ## Getting started
-In your configuration.yaml file, add the following:
+This integration can now be configured from the Home Assistant UI:
 
-```
-sensor:
-  - platform: em6
-    location: Christchurch # Grid Zone Name
-```
+1. Go to **Settings** > **Devices & Services**.
+2. Click **Add Integration** and search for **em6 Energy Price**.
+3. Select your location from the dropdown list and finish the setup.
+
+The list of locations is pulled automatically from [em6](https://app.em6.co.nz/).
 
 ## Installation
 ### HACS (recommended)

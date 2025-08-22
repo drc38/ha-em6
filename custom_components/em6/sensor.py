@@ -1,5 +1,5 @@
 """em6 sensors"""
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import logging
 import voluptuous as vol
@@ -9,6 +9,8 @@ from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.sensor import SensorStateClass
 from homeassistant.const import CONF_LOCATION
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
@@ -21,7 +23,8 @@ from .const import (
 )
 
 NAME = DOMAIN
-ISSUEURL = "https://github.com/codyc1515/hacs_em6/issues"
+# Repository issue tracker for this integration
+ISSUEURL = "https://github.com/codyc1515/ha-em6/issues"
 
 STARTUP = f"""
 -------------------------------------------------------------------
@@ -49,8 +52,15 @@ async def async_setup_platform(hass, config, async_add_entities,
     _LOGGER.debug('Setting up sensor(s)...')
 
     sensors = []
-    sensors .append(em6EnergyPriceSensor(SENSOR_NAME, api))
+    sensors.append(em6EnergyPriceSensor(SENSOR_NAME, api))
     async_add_entities(sensors, True)
+
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+):
+    """Set up em6 sensor from a config entry."""
+    api = em6Api(entry.data[CONF_LOCATION])
+    async_add_entities([em6EnergyPriceSensor(SENSOR_NAME, api)], True)
 
 class em6EnergyPriceSensor(SensorEntity):
     def __init__(self, name, api):
@@ -64,14 +74,14 @@ class em6EnergyPriceSensor(SensorEntity):
         self._attr_unique_id = DOMAIN
         self._api = api
 
-    def update(self):
+    async def async_update(self):
         _LOGGER.debug('Fetching prices')
-        response = self._api.get_prices()
-        
+        response = await self._api.async_get_prices()
+
         if response:
             _LOGGER.debug('Found price')
             _LOGGER.debug(response)
-            
+
             # Avoid updating the price (state) if the price is still the same or we will get duplicate notifications
             if self._attr_native_value != response['price'] / 1000:
                 self._attr_native_value = response['price'] / 1000
